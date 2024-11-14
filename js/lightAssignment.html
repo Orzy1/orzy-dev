@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light Switch Simulation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-200 flex justify-center items-center min-h-screen">
+
+    <div class="text-center">
+        
+        <i id="lightBulb" class="fas fa-lightbulb text-6xl text-gray-400 mb-4"></i>
+
+        
+        <button id="switchButton" onclick="toggleLight()" class="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none">
+            Turn On Light
+        </button>
+    </div>
+
+    <script>
+
+        function toggleLight() {
+            const lightBulb = document.getElementById("lightBulb");
+            const switchButton = document.getElementById("switchButton");
+
+            if (lightBulb.classList.contains("text-gray-400")) {
+                
+                lightBulb.classList.remove("text-gray-400");
+                lightBulb.classList.add("text-yellow-500");
+                lightBulb.classList.remove("fa-lightbulb");
+                lightBulb.classList.add("fa-lightbulb");
+
+                switchButton.textContent = "Turn Off Light";
+            } else {
+
+                lightBulb.classList.remove("text-yellow-500");
+                lightBulb.classList.add("text-gray-400");
+                lightBulb.classList.remove("fa-lightbulb");
+                lightBulb.classList.add("fa-lightbulb");
+
+                switchButton.textContent = "Turn On Light";
+            }
+        }
+    </script>
+</body>
+</html>

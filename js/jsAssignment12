@@ -1,0 +1,71 @@
+document.getElementById("searchForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    // Get the word input by the user
+    const word = document.getElementById("wordInput").value.trim();
+
+    // Fetch data from the dictionary API
+    fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
+        .then(response => response.json())
+        .then(data => displayResults(data))
+        .catch(error => {
+            document.getElementById("result").innerHTML = "<p>Word not found, please try again.</p>";
+            console.error("Error fetching data:", error);
+        });
+});
+
+function displayResults(data) {
+    // Clear previous results
+    const resultContainer = document.getElementById("result");
+    resultContainer.innerHTML = "";
+
+    // Check if data is available
+    if (data && data.length > 0) {
+        const wordData = data[0]; // Get the first item (since there's only one word in the response)
+
+        const word = wordData.word;
+        const transcription = wordData.phonetic || "Not available";
+        const meanings = wordData.meanings;
+
+        // Create the HTML structure to display the word
+        const wordElement = document.createElement("h2");
+        wordElement.textContent = `Word: ${word}`;
+
+        const transcriptionElement = document.createElement("p");
+        transcriptionElement.classList.add("transcription");
+        transcriptionElement.textContent = `Transcription: ${transcription}`;
+
+        // Append the word and transcription
+        resultContainer.appendChild(wordElement);
+        resultContainer.appendChild(transcriptionElement);
+
+        // Display the meanings grouped by part of speech
+        meanings.forEach(meaning => {
+            const partOfSpeech = meaning.partOfSpeech;
+            const definitions = meaning.definitions;
+
+            const partOfSpeechElement = document.createElement("div");
+            partOfSpeechElement.classList.add("part-of-speech");
+            partOfSpeechElement.textContent = `${partOfSpeech.charAt(0).toUpperCase() + partOfSpeech.slice(1)}:`;
+
+            // Append the part of speech section
+            resultContainer.appendChild(partOfSpeechElement);
+
+            definitions.forEach(def => {
+                const definitionElement = document.createElement("p");
+                definitionElement.classList.add("definition");
+                definitionElement.textContent = `- ${def.definition}`;
+
+                if (def.example) {
+                    const exampleElement = document.createElement("i");
+                    exampleElement.textContent = ` (Example: "${def.example}")`;
+                    definitionElement.appendChild(exampleElement);
+                }
+
+                partOfSpeechElement.appendChild(definitionElement);
+            });
+        });
+    } else {
+        resultContainer.innerHTML = "<p>Word not found, please try again.</p>";
+    }
+}
